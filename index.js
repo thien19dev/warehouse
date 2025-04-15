@@ -8,6 +8,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public')); // load file HTML quét QR
+app.get('/', (req,res) => {
+    res.sendFile(Path2D.join(__dirname, 'public', 'qr-scanner.html'));
+})
 app.use('/api/product', productRoutes);
 
 mongoose.connect(process.env.MONGO_URI).then(()=>{
