@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quét mã QR</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <h2>Quét mã QR để tra cứu sản phẩm</h2>
+  <div id="reader" style="width: 300px;"></div>
+  <p id="result"></p>
+
+  <script>
+    function onScanSuccess(decodedText) {
+      document.getElementById("result").innerText = "Đang tìm sản phẩm...";
+      fetch(/api/products/${decodedText})
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("result").innerText =
+            data.name
+              ? ✔ Sản phẩm: ${data.name} - Giá: ${data.price}đ - SL: ${data.quantity}
+              : "❌ Không tìm thấy sản phẩm";
+        });
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      onScanSuccess
+    );
+  </script>
+</body>
+</html>
